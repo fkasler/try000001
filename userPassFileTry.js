@@ -18,7 +18,7 @@ FgBlue = "\x1b[34m"
 FgCyan = "\x1b[36m"
 
 function is_email_valid(cred){
-  email = cred.split(':')[0]
+  let email = cred.split(':')[0]
   let bodyString = `{"Username":"${email}"}`
   
   let headers = {
