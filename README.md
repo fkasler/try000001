@@ -25,9 +25,9 @@ OR for a userpass file with entries like 'john.doe@example.com:Johndoepassword12
 
 ```node userPassFileTry.js user_pass_file.txt```
 
-If you want to just perform step one (username validation) or step two (authentication attempt) in isolation just specify the step as your third argument:
+If you want to just perform step one (username validation) or step two (authentication attempt) in isolation just specify the step as your last argument:
 
-```node try000001.js email_list.txt 'placeholder' 1```
+```node try000001.js email_list.txt 1```
 
 OR
 
