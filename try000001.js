@@ -19,6 +19,10 @@ var user_file = process.argv[2]
 var pass = process.argv[3]
 var mode = process.argv[4]
 
+if(pass == 1){
+  mode = 1
+}
+
 function is_email_valid(email){
   if(mode == 2){
     is_password_valid(email)
