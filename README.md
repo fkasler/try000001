@@ -25,6 +25,14 @@ OR for a userpass file with entries like 'john.doe@example.com:Johndoepassword12
 
 ```node userPassFileTry.js user_pass_file.txt```
 
+If you want to just perform step one (username validation) or step two (authentication attempt) in isolation just specify the step as your third argument:
+
+```node try000001.js email_list.txt 'placeholder' 1```
+
+OR
+
+```node try000001.js email_list.txt 'JustCheckThisPassword123!' 2```
+
 ----
 ## Credits
 
@@ -33,4 +41,3 @@ Oliver Morton (@grimhacker):
 
 Korey McKinley (@Korey_K2):
 [o365creeper](https://github.com/LMGsec/o365creeper)
-
