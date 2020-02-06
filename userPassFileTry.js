@@ -3,6 +3,8 @@ const request = require('request')
 const lineReader = require('line-reader');
 process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = 0
 
+stream = fs.createWriteStream("valid_emails.txt", {flags:'a'});
+
 emails = []
 start_index = 0
 //temp value defined after parsing the file
@@ -43,6 +45,7 @@ function is_email_valid(cred){
     request(options, function (error, response, body) {
       let email_status = JSON.parse(body).IfExistsResult
       if(email_status == 0){
+        stream.write(email + "\n")
         console.log(FgBlue, `[*] VALID_EMAIL: ${email}`)
         if(mode == 1){
           threads -= 1
