@@ -8,7 +8,7 @@ Simple node script to enumerate valid users and password spray Office365. It wil
 ----
 ## Install
 ```
-git clone https://git.issgs.net/fkasler/try000001.git
+git clone https://github.com/fkasler/try000001.git
 cd try000001
 npm install
 ```
