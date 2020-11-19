@@ -44,7 +44,7 @@ function is_email_valid(cred){
     }
     request(options, function (error, response, body) {
       let email_status = JSON.parse(body).IfExistsResult
-      if(email_status == 0){
+      if(email_status != 1){
         stream.write(email + "\n")
         console.log(FgBlue, `[*] VALID_EMAIL: ${email}`)
         if(mode == 1){
